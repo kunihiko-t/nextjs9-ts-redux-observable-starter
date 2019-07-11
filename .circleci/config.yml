@@ -1,0 +1,56 @@
+version: 2
+
+jobs:
+  build:
+    docker:
+      - image: circleci/node
+        environment:
+          TZ: "/usr/share/zoneinfo/Asia/Tokyo"
+    steps:
+      - checkout
+
+      - restore_cache:
+          name: Restore yarn cache
+          keys:
+            - myapp-yarn-{{ .Branch }}-{{ checksum "yarn.lock" }}
+
+      - run:
+          name: Install System Dependencies
+          command: |
+            sudo apt-get update
+            sudo apt-get install python-dev libxml2-dev libxslt-dev
+            sudo apt-get install -y build-essential
+            sudo apt-get install python-pip
+            pip install awscli --upgrade --user
+
+      - run:
+          name: yarn install & build
+          command: |
+            yarn_cache_path=./node_modules
+            if [ ! -e $yarn_cache_path ]; then
+                yarn install
+            fi
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              yarn build
+              yarn export
+            elif [ "${CIRCLE_BRANCH}" == "staging" ]; then
+              yarn build
+              yarn export
+            fi
+
+      - save_cache:
+          key: myapp-yarn-{{ .Branch }}-{{ checksum "yarn.lock" }}
+          paths:
+            - ~/.yarn-cache
+            - ./node_modules
+
+      - deploy:
+          name: Deploy
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              ~/.local/bin/aws s3 cp ./dist s3://nextjs9-sample --recursive
+              ~/.local/bin/aws cloudfront create-invalidation --distribution-id E2HC7PWYOHX8K2 --paths '/*'
+            elif [ "${CIRCLE_BRANCH}" == "staging" ]; then
+              ~/.local/bin/aws s3 cp ./dist s3://nextjs9-sample --recursive
+              ~/.local/bin/aws cloudfront create-invalidation --distribution-id E2HC7PWYOHX8K2 --paths '/*'
+            fi
