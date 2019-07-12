@@ -49,8 +49,8 @@ jobs:
           command: |
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
               ~/.local/bin/aws s3 cp ./out s3://nextjs9-sample --recursive
-              ~/.local/bin/aws cloudfront create-invalidation --distribution-id E2HC7PWYOHX8K2 --paths '/*'
+              ~/.local/bin/aws cloudfront create-invalidation --distribution-id ${CF_DISTRIBUTION_ID} --paths '/*'
             elif [ "${CIRCLE_BRANCH}" == "staging" ]; then
               ~/.local/bin/aws s3 cp ./out s3://nextjs9-sample --recursive
-              ~/.local/bin/aws cloudfront create-invalidation --distribution-id E2HC7PWYOHX8K2 --paths '/*'
+              ~/.local/bin/aws cloudfront create-invalidation --distribution-id ${CF_DISTRIBUTION_ID} --paths '/*'
             fi
