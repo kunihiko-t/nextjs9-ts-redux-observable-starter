@@ -1,5 +1,6 @@
 {
   "version": 2,
+  "alias": "now.valletta.io",
   "builds": [
     { "src": "package.json", "use": "@now/next" }
   ]
