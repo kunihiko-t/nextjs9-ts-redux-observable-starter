@@ -1,0 +1,27 @@
+{
+  "hosting": {
+    "public": "public",
+    "cleanUrls": true,
+    "rewrites": [
+      {
+        "source": "/static/*",
+        "destination": "/*"
+      },
+      {
+        "source": "*:name.html",
+        "destination": "/:name"
+      },
+      {
+        "source": "/",
+        "function": "index"
+      }
+    ]
+  },
+  "functions": {
+    "predeploy": [
+      "yarn --prefix \"$RESOURCE_DIR\" build",
+      "yarn export"
+    ],
+    "source": "functions"
+  }
+}

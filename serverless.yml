@@ -1,0 +1,6 @@
+plugins:
+  - serverless-nextjs-plugin
+
+package:
+  exclude:
+    - ./**

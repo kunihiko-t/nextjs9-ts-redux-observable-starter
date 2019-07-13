@@ -21,6 +21,10 @@ function HACK_removeMinimizeOptionFromCssLoaders(config) {
 }
 
 const nextConfig = {
+    target: 'serverless',
+    distDir: "functions/build",
+    // https://github.com/zeit/next.js/issues/7909
+    publicRuntimeConfig: false,
     webpack(config, options) {
         config.resolve.alias = {
             ...config.resolve.alias,
