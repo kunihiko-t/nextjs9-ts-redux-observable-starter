@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: next-deployment
+  namespace: next
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: next
+  template:
+    metadata:
+      labels:
+        app: next
+    spec:
+      terminationGracePeriodSeconds: 1
+      containers:
+      - name: nginx
+        image: nginx:alpine
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+          name: http
+        resources: {}
+        volumeMounts:
+        - mountPath: /etc/nginx/nginx.conf
+          name: nginx-conf
+          subPath: nginx.conf
+        workingDir: /var/www/html
+      - name: next
+        image: next
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 3000
+          name: next
+        resources: {}
+      volumes:
+      - name: nginx-conf
+        configMap:
+          name: next-nginx-configmap
+
