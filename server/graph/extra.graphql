@@ -1,0 +1,11 @@
+
+type Photo {
+    id: ID!
+    text: String!
+    user: User!
+}
+
+type Subscription {
+    newTodo: Todo!
+}
+
