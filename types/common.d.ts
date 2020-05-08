@@ -1,14 +1,14 @@
 import { History } from 'history'
 
 interface RootProps {
-    history: History;
+    history: History
 }
 
 interface HeadProps {
-    title: string,
-    description: string,
-    url: string,
-    title: string,
+    title: string
+    description: string
+    url: string
+    title: string
     ogImage?: string
 }
 

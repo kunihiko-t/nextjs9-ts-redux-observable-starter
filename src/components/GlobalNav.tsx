@@ -1,6 +1,6 @@
 import React from 'react'
 import { Menu } from 'semantic-ui-react'
-type NaviItem = 'github' | 'renderProps'
+type NaviItem = 'github' | 'renderProps' | 'graphql'
 import { useRouter } from 'next/router';
 
 const GlobalNav: React.FC<{ activeItem: NaviItem }> = ({ activeItem }) => {
@@ -17,6 +17,12 @@ const GlobalNav: React.FC<{ activeItem: NaviItem }> = ({ activeItem }) => {
                     name='Render Props'
                     active={activeItem === 'renderProps'}
                     onClick={() => router.push('/render_props')}
+                    link={true}
+                />
+                <Menu.Item
+                    name='GraphQL'
+                    active={activeItem === 'graphql'}
+                    onClick={() => router.push('/graphql')}
                     link={true}
                 />
             </Menu>
