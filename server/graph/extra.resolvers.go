@@ -5,14 +5,19 @@ package graph
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/kunihiko-t/nextjs9-ts-redux-observable-starter/server/gqlgen-todos/graph/generated"
 	"github.com/kunihiko-t/nextjs9-ts-redux-observable-starter/server/gqlgen-todos/graph/model"
 )
 
 func (r *subscriptionResolver) NewTodo(ctx context.Context) (<-chan *model.Todo, error) {
-	panic(fmt.Errorf("not implemented"))
+	event := make(chan *model.Todo)
+
+	r.mu.Lock()
+	r.c = event
+	r.mu.Unlock()
+
+	return event, nil
 }
 
 // Subscription returns generated.SubscriptionResolver implementation.

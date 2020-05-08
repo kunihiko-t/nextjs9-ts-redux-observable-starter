@@ -298,7 +298,8 @@ input NewTodo {
 
 type Mutation {
   createTodo(input: NewTodo!): Todo!
-}`, BuiltIn: false},
+}
+`, BuiltIn: false},
 	&ast.Source{Name: "graph/extra.graphql", Input: `
 type Photo {
     id: ID!
@@ -309,7 +310,6 @@ type Photo {
 type Subscription {
     newTodo: Todo!
 }
-
 `, BuiltIn: false},
 }
 var parsedSchema = gqlparser.MustLoadSchema(sources...)
