@@ -7,12 +7,6 @@ type NewTodo struct {
 	UserID string `json:"userId"`
 }
 
-type Photo struct {
-	ID   string `json:"id"`
-	Text string `json:"text"`
-	User *User  `json:"user"`
-}
-
 type Todo struct {
 	ID   string `json:"id"`
 	Text string `json:"text"`
