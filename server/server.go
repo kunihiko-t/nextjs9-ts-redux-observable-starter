@@ -12,11 +12,15 @@ import (
 	"github.com/kunihiko-t/nextjs9-ts-redux-observable-starter/server/gqlgen-todos/graph"
 	"github.com/kunihiko-t/nextjs9-ts-redux-observable-starter/server/gqlgen-todos/graph/generated"
 	"github.com/rs/cors"
+	"github.com/go-chi/chi"
 )
 
 const defaultPort = "8080"
 
 func main() {
+	router := chi.NewRouter()
+	router.Use(cors.AllowAll().Handler)
+
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = defaultPort
@@ -32,13 +36,10 @@ func main() {
 	}
 	srv.AddTransport(&transport.Websocket{Upgrader: upgrader})
 
-	mux := http.NewServeMux()
 
-	mux.Handle("/", playground.Handler("GraphQL playground", "/query"))
-	mux.Handle("/query", srv)
-
-	handler := cors.AllowAll().Handler(mux)
+	router.Handle("/", playground.Handler("GraphQL playground", "/query"))
+	router.Handle("/query", srv)
 
 	log.Printf("connect to http://localhost:%s/ for GraphQL playground", port)
-	log.Fatal(http.ListenAndServe(":"+port, handler))
+	log.Fatal(http.ListenAndServe(":"+port, router))
 }
