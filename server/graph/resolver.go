@@ -1,8 +1,6 @@
 package graph
 
 import (
-	"sync"
-
 	"github.com/kunihiko-t/nextjs9-ts-redux-observable-starter/server/gqlgen-todos/graph/model"
 )
 
@@ -12,6 +10,5 @@ import (
 
 type Resolver struct {
 	todos []*model.Todo
-	mu    sync.Mutex
 	c     chan *model.Todo
 }

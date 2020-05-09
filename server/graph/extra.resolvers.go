@@ -10,12 +10,10 @@ import (
 	"github.com/kunihiko-t/nextjs9-ts-redux-observable-starter/server/gqlgen-todos/graph/model"
 )
 
-func (r *subscriptionResolver) NewTodo(ctx context.Context) (<-chan *model.Todo, error) {
+func (r *subscriptionResolver) Todo(ctx context.Context) (<-chan *model.Todo, error) {
 	event := make(chan *model.Todo)
 
-	r.mu.Lock()
 	r.c = event
-	r.mu.Unlock()
 
 	return event, nil
 }

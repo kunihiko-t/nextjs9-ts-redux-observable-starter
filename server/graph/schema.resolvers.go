@@ -16,19 +16,34 @@ func (r *mutationResolver) CreateTodo(ctx context.Context, input model.NewTodo) 
 	todo := &model.Todo{
 		Text: input.Text,
 		ID:   fmt.Sprintf("T%d", rand.Int()),
-		User: &model.User{ID: input.UserID, Name: "user " + input.UserID},
 	}
 	r.todos = append(r.todos, todo)
 
-	r.mu.Lock()
-	r.c <- todo
-	r.mu.Unlock()
+	if r.c != nil {
+		r.c <- todo
+	}
 
 	return todo, nil
 }
 
-func (r *mutationResolver) ChangeStatus(ctx context.Context, isDone bool) (*model.Todo, error) {
-	panic(fmt.Errorf("not implemented"))
+func (r *mutationResolver) ChangeStatus(ctx context.Context, id string, isDone bool) (*model.Todo, error) {
+	var todo *model.Todo
+	for _, t := range r.todos {
+		if t.ID == id {
+			todo = t
+			break
+		}
+	}
+	if todo == nil {
+		return nil, fmt.Errorf("Not found")
+	}
+
+	todo.Done = isDone
+	if r.c != nil {
+		r.c <- todo
+	}
+
+	return todo, nil
 }
 
 func (r *queryResolver) Todos(ctx context.Context) ([]*model.Todo, error) {
