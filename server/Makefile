@@ -5,4 +5,4 @@ generate:
 
 .PHONY: run
 run:
-	go run server.go
+	go vet ./...;go run server.go
