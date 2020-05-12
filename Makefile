@@ -1,6 +1,6 @@
 .PHONY: init
 init:
-	kubectl apply -f kubernetes/charts/namespace.yaml
+	kubectl apply -f kubernetes/namespace.yaml
 
 .PHONY: install-mysql
 install-mysql:
