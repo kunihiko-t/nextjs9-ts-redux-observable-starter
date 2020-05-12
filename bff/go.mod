@@ -1,4 +1,4 @@
-module github.com/kunihiko-t/nextjs9-ts-redux-observable-starter/server/gqlgen-todos
+module github.com/kunihiko-t/nextjs9-ts-redux-observable-starter/bff/gqlgen-todos
 
 go 1.14
 

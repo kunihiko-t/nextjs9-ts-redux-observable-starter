@@ -3,7 +3,7 @@ schema:
   - graph/*.graphqls
   - graph/*.graphql
 
-# Where should the generated server code go?
+# Where should the generated bff code go?
 exec:
   filename: graph/generated/generated.go
   package: generated
@@ -36,7 +36,7 @@ resolver:
 # gqlgen will search for any type names in the schema in these go packages
 # if they match it will use them, otherwise it will generate them.
 autobind:
-  - "github.com/kunihiko-t/nextjs9-ts-redux-observable-starter/server/gqlgen-todos/graph/model"
+  - "github.com/kunihiko-t/nextjs9-ts-redux-observable-starter/bff/gqlgen-todos/graph/model"
 
 # This section declares type mapping between the GraphQL and go type systems
 #
