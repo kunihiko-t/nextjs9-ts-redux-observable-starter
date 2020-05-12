@@ -1,0 +1,18 @@
+syntax = "proto3";
+// The todo service definition.
+service TodoService {
+  rpc GetTodos (Empty) returns (Todos) {}
+  rpc UpdateTodo (Todo) returns (Todo) {}
+}
+// The request message containing the user's name.
+message Todos {
+  repeated Todo todo = 1;
+}
+// The response message containing the greetings
+message Todo {
+    string  id = 1;
+    string text = 2;
+    bool done = 3;
+}
+
+message Empty {}

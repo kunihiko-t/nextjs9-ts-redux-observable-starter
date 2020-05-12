@@ -1,6 +1,7 @@
 .PHONY: init
 init:
 	kubectl apply -f kubernetes/namespace.yaml
+	helm repo add stable https://kubernetes-charts.storage.googleapis.com
 
 .PHONY: install-mysql
 install-mysql:
