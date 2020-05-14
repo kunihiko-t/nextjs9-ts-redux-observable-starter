@@ -22,7 +22,7 @@ migrate-down:
 # go get -u google.golang.org/grpc
 # go get -u github.com/golang/protobuf/protoc-gen-go
 .PHONY: generate-from-proto
-generate-server-from-proto:
+generate-from-proto:
 	protoc --proto_path=protobuf  ./protobuf/todo.proto  --go_out=plugins=grpc:./grpc/pb
 	protoc --proto_path=protobuf  ./protobuf/todo.proto  --go_out=plugins=grpc:./bff/pb
 

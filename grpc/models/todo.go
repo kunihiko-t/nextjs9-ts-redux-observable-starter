@@ -37,3 +37,12 @@ func GetTodos() []Todo {
 	db.Find(&todos)
 	return todos
 }
+
+func CreateTodo(text string) Todo {
+	todo := Todo{
+		Text: sql.NullString{text, true},
+		Done: sql.NullBool{false, true},
+	}
+	db.Create(&todo)
+	return todo
+}

@@ -22,6 +22,12 @@ func (s *server) GetTodos(context.Context, *pb.Empty) (*pb.Todos, error) {
 	return &pb.Todos{TodoList: todos}, nil
 }
 
+func (*server) CreateTodo(context.Context, *TodoRequest) (*Todo, error) {
+	todo = models.CreateTodo(TodoRequest.text)
+
+	return todo, nil
+}
+
 func (*server) UpdateTodo(context.Context, *pb.Todo) (*pb.Todo, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateTodo not implemented")
 }

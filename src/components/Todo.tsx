@@ -1,11 +1,21 @@
 import { useQuery, useMutation, useSubscription } from '@apollo/react-hooks'
 import { gql } from 'apollo-boost'
-import React, { useEffect } from 'react'
-import { Checkbox } from 'semantic-ui-react'
+import React, { useEffect, useState } from 'react'
+import { Button, Checkbox, Form } from 'semantic-ui-react'
 
 const FIND_TODOS = gql`
     query findTodos {
         todos {
+            id
+            text
+            done
+        }
+    }
+`
+
+const CREATE_TODO = gql`
+    mutation createTodo($input: NewTodo!) {
+        createTodo(input: $input) {
             id
             text
             done
@@ -23,7 +33,6 @@ const CHANGE_STATUS = gql`
     }
 `
 
-
 const TODO_SUBSCRIPTION = gql`
     subscription todo {
         todo {
@@ -33,7 +42,6 @@ const TODO_SUBSCRIPTION = gql`
         }
     }
 `
-
 
 interface Todo {
     id: string
@@ -46,7 +54,9 @@ interface TodoList {
 }
 
 const Todo = () => {
+    const [ text, setText ] = useState('')
     const { loading, error, data } = useQuery<TodoList, {}>(FIND_TODOS)
+    const [createTodo] = useMutation(CREATE_TODO)
     // useEffect(() => {
     //     //Mount
     //     console.log('mount')
@@ -76,7 +86,21 @@ const Todo = () => {
             }}/>
         </div>
     ))
-    return (<> {todoList} </>)
+    return (
+      <>
+        <div>
+          <Form onSubmit={() => {createTodo({ variables: { input: { text }}})}}>
+            <Form.Input placeholder='todo'
+                        name='text'
+                        value={text}
+                        onChange={(e, { value }) => setText(value)}>
+            </Form.Input>
+            <Button type='submit'>Submit</Button>
+          </Form>
+        </div>
+        <div>{todoList}</div>
+      </>
+    )
 }
 
 export default Todo
