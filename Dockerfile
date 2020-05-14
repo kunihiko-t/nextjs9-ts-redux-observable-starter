@@ -4,8 +4,8 @@ FROM node:${NODE_VERSION}-alpine as builder
 
 WORKDIR /app
 
-COPY package.json yarn.lock
-RUN yarn install
+COPY package.json yarn.lock ./
+RUN apk add git && yarn install
 
 COPY . /app
 

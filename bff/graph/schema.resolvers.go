@@ -7,9 +7,9 @@ import (
 	"context"
 	"fmt"
 	"math/rand"
-
 	"github.com/kunihiko-t/nextjs9-ts-redux-observable-starter/bff/gqlgen-todos/graph/generated"
 	"github.com/kunihiko-t/nextjs9-ts-redux-observable-starter/bff/gqlgen-todos/graph/model"
+	"github.com/kunihiko-t/nextjs9-ts-redux-observable-starter/bff/gqlgen-todos/pb"
 )
 
 func (r *mutationResolver) CreateTodo(ctx context.Context, input model.NewTodo) (*model.Todo, error) {
@@ -47,7 +47,16 @@ func (r *mutationResolver) ChangeStatus(ctx context.Context, id string, isDone b
 }
 
 func (r *queryResolver) Todos(ctx context.Context) ([]*model.Todo, error) {
-	return r.todos, nil
+	client := pb.NewTodoServiceClient(conn)
+	res, err := client.GetTodos(ctx, &pb.Empty{})
+	if err != nil {
+		panic(fmt.Errorf("got: %v", err))
+	}
+	results := []*model.Todo{}
+	for _, v := range res.GetTodoList(){
+		results = append(results, &model.Todo{ID: v.Id, Text: v.Text, Done: v.Done})
+	}
+	return results, nil
 }
 
 // Mutation returns generated.MutationResolver implementation.

@@ -1,4 +1,5 @@
 syntax = "proto3";
+option go_package = "pb";
 // The todo service definition.
 service TodoService {
   rpc GetTodos (Empty) returns (Todos) {}
@@ -6,7 +7,7 @@ service TodoService {
 }
 // The request message containing the user's name.
 message Todos {
-  repeated Todo todo = 1;
+  repeated Todo todoList = 1;
 }
 // The response message containing the greetings
 message Todo {
