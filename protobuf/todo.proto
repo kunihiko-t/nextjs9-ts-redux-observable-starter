@@ -1,6 +1,6 @@
 syntax = "proto3";
 option go_package = ".;pb";
-import "github.com/mwitkow/go-proto-validators/validator.proto";
+import "validate/validate.proto";
 
 // The todo service definition.
 service TodoService {
@@ -20,7 +20,7 @@ message Todo {
 }
 
 message TodoRequest {
-  string text = 1 [(validator.field) = {length_lt: 20, string_not_empty: true}];
+  string text = 1 [(validate.rules).string = {max_len: 20, min_len: 1}];
 }
 
 message Empty {}

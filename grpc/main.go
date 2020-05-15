@@ -6,7 +6,6 @@ import (
 	"net"
 
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
-	grpc_validator "github.com/grpc-ecosystem/go-grpc-middleware/validator"
 	"github.com/kunihiko-t/nextjs9-ts-redux-observable-starter/grpc/models"
 	"github.com/kunihiko-t/nextjs9-ts-redux-observable-starter/grpc/pb"
 	"google.golang.org/grpc"
@@ -15,6 +14,26 @@ import (
 )
 
 type server struct{}
+
+type Validator interface {
+	Validate() error
+}
+
+// unary
+func ServerValidationUnaryInterceptor(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (resp interface{}, err error) {
+	if r, ok := req.(Validator); ok {
+		if err := r.Validate(); err != nil {
+			// TODO: validation error のカスタマイズ
+			// if e, ok := err.(pb.TodoRequestValidationError); ok {
+			// 	message :=
+			// }
+
+			return nil, status.Error(codes.InvalidArgument, err.Error())
+		}
+	}
+
+	return handler(ctx, req)
+}
 
 func (s *server) GetTodos(_ context.Context, _ *pb.Empty) (*pb.Todos, error) {
 	todos := []*pb.Todo{}
@@ -41,11 +60,8 @@ func main() {
 	}
 
 	s := grpc.NewServer(
-		grpc.StreamInterceptor(grpc_middleware.ChainStreamServer(
-			grpc_validator.StreamServerInterceptor(),
-		)),
 		grpc.UnaryInterceptor(grpc_middleware.ChainUnaryServer(
-			grpc_validator.UnaryServerInterceptor(),
+			ServerValidationUnaryInterceptor,
 		)),
 	)
 	pb.RegisterTodoServiceServer(s, &server{})
