@@ -3,6 +3,7 @@ package models
 import (
 	"database/sql"
 
+	"github.com/google/uuid"
 	"github.com/jinzhu/gorm"
 	"github.com/kunihiko-t/nextjs9-ts-redux-observable-starter/grpc/utils"
 )
@@ -39,9 +40,11 @@ func GetTodos() []Todo {
 }
 
 func CreateTodo(text string) Todo {
+	randomObj, _ := uuid.NewRandom()
 	todo := Todo{
-		Text: sql.NullString{text, true},
-		Done: sql.NullBool{false, true},
+		ID:   sql.NullString{String: randomObj.String(), Valid: true},
+		Text: sql.NullString{String: text, Valid: true},
+		Done: sql.NullBool{Bool: false, Valid: true},
 	}
 	db.Create(&todo)
 	return todo

@@ -6,18 +6,23 @@ package graph
 import (
 	"context"
 	"fmt"
-	"math/rand"
+
 	"github.com/kunihiko-t/nextjs9-ts-redux-observable-starter/bff/gqlgen-todos/graph/generated"
 	"github.com/kunihiko-t/nextjs9-ts-redux-observable-starter/bff/gqlgen-todos/graph/model"
 	"github.com/kunihiko-t/nextjs9-ts-redux-observable-starter/bff/gqlgen-todos/pb"
 )
 
 func (r *mutationResolver) CreateTodo(ctx context.Context, input model.NewTodo) (*model.Todo, error) {
-	todo := &model.Todo{
-		Text: input.Text,
-		ID:   fmt.Sprintf("T%d", rand.Int()),
+	client := pb.NewTodoServiceClient(conn)
+	todoRequest := pb.TodoRequest{Text: input.Text}
+	res, err := client.CreateTodo(ctx, &todoRequest)
+	if err != nil {
+		return nil, err
 	}
-	r.todos = append(r.todos, todo)
+	todo := &model.Todo{
+		Text: res.Text,
+		ID:   res.Id,
+	}
 
 	if r.c != nil {
 		r.c <- todo
@@ -53,7 +58,7 @@ func (r *queryResolver) Todos(ctx context.Context) ([]*model.Todo, error) {
 		panic(fmt.Errorf("got: %v", err))
 	}
 	results := []*model.Todo{}
-	for _, v := range res.GetTodoList(){
+	for _, v := range res.GetTodoList() {
 		results = append(results, &model.Todo{ID: v.Id, Text: v.Text, Done: v.Done})
 	}
 	return results, nil

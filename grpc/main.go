@@ -5,6 +5,8 @@ import (
 	"log"
 	"net"
 
+	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
+	grpc_validator "github.com/grpc-ecosystem/go-grpc-middleware/validator"
 	"github.com/kunihiko-t/nextjs9-ts-redux-observable-starter/grpc/models"
 	"github.com/kunihiko-t/nextjs9-ts-redux-observable-starter/grpc/pb"
 	"google.golang.org/grpc"
@@ -14,7 +16,7 @@ import (
 
 type server struct{}
 
-func (s *server) GetTodos(context.Context, *pb.Empty) (*pb.Todos, error) {
+func (s *server) GetTodos(_ context.Context, _ *pb.Empty) (*pb.Todos, error) {
 	todos := []*pb.Todo{}
 	for _, v := range models.GetTodos() {
 		todos = append(todos, &pb.Todo{Id: v.ID.String, Text: v.Text.String, Done: v.Done.Bool})
@@ -22,10 +24,10 @@ func (s *server) GetTodos(context.Context, *pb.Empty) (*pb.Todos, error) {
 	return &pb.Todos{TodoList: todos}, nil
 }
 
-func (*server) CreateTodo(context.Context, *TodoRequest) (*Todo, error) {
-	todo = models.CreateTodo(TodoRequest.text)
+func (*server) CreateTodo(_ context.Context, req *pb.TodoRequest) (*pb.Todo, error) {
+	todo := models.CreateTodo(req.Text)
 
-	return todo, nil
+	return &pb.Todo{Id: todo.ID.String, Text: todo.Text.String, Done: todo.Done.Bool}, nil
 }
 
 func (*server) UpdateTodo(context.Context, *pb.Todo) (*pb.Todo, error) {
@@ -38,7 +40,14 @@ func main() {
 		log.Fatalf("Failed to listen: %v", err)
 	}
 
-	s := grpc.NewServer()
+	s := grpc.NewServer(
+		grpc.StreamInterceptor(grpc_middleware.ChainStreamServer(
+			grpc_validator.StreamServerInterceptor(),
+		)),
+		grpc.UnaryInterceptor(grpc_middleware.ChainUnaryServer(
+			grpc_validator.UnaryServerInterceptor(),
+		)),
+	)
 	pb.RegisterTodoServiceServer(s, &server{})
 
 	if err := s.Serve(lis); err != nil {

@@ -21,10 +21,19 @@ migrate-down:
 # brew install protobuf
 # go get -u google.golang.org/grpc
 # go get -u github.com/golang/protobuf/protoc-gen-go
+# go get github.com/mwitkow/go-proto-validators/protoc-gen-govalidators
 .PHONY: generate-from-proto
 generate-from-proto:
-	protoc --proto_path=protobuf  ./protobuf/todo.proto  --go_out=plugins=grpc:./grpc/pb
-	protoc --proto_path=protobuf  ./protobuf/todo.proto  --go_out=plugins=grpc:./bff/pb
+	protoc --proto_path=${GOPATH}/src \
+		--proto_path=protobuf \
+		./protobuf/todo.proto \
+		--go_out=plugins=grpc:./grpc/pb \
+		--govalidators_out=./grpc/pb
+	protoc --proto_path=${GOPATH}/src \
+		--proto_path=protobuf  \
+		./protobuf/todo.proto \
+		--go_out=plugins=grpc:./bff/pb \
+		--govalidators_out=./bff/pb
 
 .PHONY: run-next
 run-next:
