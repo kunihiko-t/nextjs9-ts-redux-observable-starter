@@ -7,12 +7,23 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/99designs/gqlgen/graphql"
 	"github.com/kunihiko-t/nextjs9-ts-redux-observable-starter/bff/gqlgen-todos/graph/generated"
 	"github.com/kunihiko-t/nextjs9-ts-redux-observable-starter/bff/gqlgen-todos/graph/model"
 	"github.com/kunihiko-t/nextjs9-ts-redux-observable-starter/bff/gqlgen-todos/pb"
+	"github.com/vektah/gqlparser/v2/ast"
+	"github.com/vektah/gqlparser/v2/gqlerror"
 )
 
 func (r *mutationResolver) CreateTodo(ctx context.Context, input model.NewTodo) (*model.Todo, error) {
+	err := input.Validate()
+	if err != nil {
+		var path ast.Path
+		path = graphql.GetFieldContext(ctx).Path()
+		path = append(path, ast.PathName("text"))
+		return nil, gqlerror.ErrorPathf(path, err.Error())
+	}
+
 	client := pb.NewTodoServiceClient(conn)
 	todoRequest := pb.TodoCreateRequest{Text: input.Text}
 	res, err := client.CreateTodo(ctx, &todoRequest)

@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useSubscription } from '@apollo/react-hooks'
 import { gql } from 'apollo-boost'
 import React, { useEffect, useMemo, useState } from 'react'
-import { Button, Checkbox, Form, List, Container, Divider } from 'semantic-ui-react'
+import { Button, Checkbox, Form, List, Container, Divider, Message } from 'semantic-ui-react'
 
 const FIND_TODOS = gql`
     query findTodos {
@@ -56,7 +56,7 @@ interface TodoList {
 const Todo = () => {
     const [text, setText] = useState('')
     const [todoArray, setTodoArray] = useState([])
-    const [createTodo] = useMutation(CREATE_TODO)
+    const [createTodo, { error: mError }] = useMutation(CREATE_TODO)
     const { loading, error, data } = useQuery<TodoList, {}>(FIND_TODOS)
     useEffect(() => {
         if (data) {
@@ -106,13 +106,26 @@ const Todo = () => {
 
 
     ))
+
+    const errMessage = mError ? (
+        <Message negative>
+            <Message.Header>We're sorry we can't apply that discount</Message.Header>
+            {mError.graphQLErrors.map(({ message }, i) => (
+                <p key={i}>{message}</p>
+            ))}
+        </Message>
+    ) : null
+
     return (
         <>
             <Container>
+                {errMessage}
                 <div>
                     <Form onSubmit={async () => {
-                        const resp = await createTodo({ variables: { input: { text } } })
-                        setTodoArray([...todoArray, resp.data.createTodo])
+                        try {
+                          const resp = await createTodo({ variables: { input: { text } } })
+                          setTodoArray([...todoArray, resp.data.createTodo])
+                        } catch(_) {}
                     }}>
                         <Form.Input placeholder='todo'
                                     name='text'
