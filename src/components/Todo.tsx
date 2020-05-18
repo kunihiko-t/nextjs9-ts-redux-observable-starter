@@ -82,7 +82,6 @@ const Todo = () => {
         <div>Error {error}</div>
     </>)
     const todoList = todoArray.map(({ text, done, id }) => (
-
         <List.Item key={id}>
             <List.Icon name='dot circle' size='small' verticalAlign='middle'/>
             <List.Content>
@@ -109,7 +108,7 @@ const Todo = () => {
 
     const errMessage = mError ? (
         <Message negative>
-            <Message.Header>We're sorry we can't apply that discount</Message.Header>
+            <Message.Header>Validation Error!</Message.Header>
             {mError.graphQLErrors.map(({ message }, i) => (
                 <p key={i}>{message}</p>
             ))}

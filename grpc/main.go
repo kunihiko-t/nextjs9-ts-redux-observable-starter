@@ -39,7 +39,6 @@ func (s *server) GetTodos(_ context.Context, _ *pb.Empty) (*pb.Todos, error) {
 
 func (*server) CreateTodo(_ context.Context, req *pb.TodoCreateRequest) (*pb.Todo, error) {
 	todo := models.CreateTodo(req.Text)
-
 	return &pb.Todo{Id: todo.ID.String, Text: todo.Text.String, Done: todo.Done.Bool}, nil
 }
 
