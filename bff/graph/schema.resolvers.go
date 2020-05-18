@@ -14,14 +14,15 @@ import (
 
 func (r *mutationResolver) CreateTodo(ctx context.Context, input model.NewTodo) (*model.Todo, error) {
 	client := pb.NewTodoServiceClient(conn)
-	todoRequest := pb.TodoRequest{Text: input.Text}
+	todoRequest := pb.TodoCreateRequest{Text: input.Text}
 	res, err := client.CreateTodo(ctx, &todoRequest)
 	if err != nil {
 		return nil, err
 	}
 	todo := &model.Todo{
-		Text: res.Text,
-		ID:   res.Id,
+		Text: res.GetText(),
+		ID:   res.GetId(),
+		Done: res.GetDone(),
 	}
 
 	if r.c != nil {
@@ -32,18 +33,18 @@ func (r *mutationResolver) CreateTodo(ctx context.Context, input model.NewTodo) 
 }
 
 func (r *mutationResolver) ChangeStatus(ctx context.Context, id string, isDone bool) (*model.Todo, error) {
-	var todo *model.Todo
-	for _, t := range r.todos {
-		if t.ID == id {
-			todo = t
-			break
-		}
+	client := pb.NewTodoServiceClient(conn)
+	todoRequest := pb.TodoUpdateRequest{Id: id, Done: isDone}
+	res, err := client.UpdateTodo(ctx, &todoRequest)
+	if err != nil {
+		return nil, err
 	}
-	if todo == nil {
-		return nil, fmt.Errorf("Not found")
+	todo := &model.Todo{
+		Text: res.GetText(),
+		ID:   res.GetId(),
+		Done: res.GetDone(),
 	}
 
-	todo.Done = isDone
 	if r.c != nil {
 		r.c <- todo
 	}
@@ -57,7 +58,7 @@ func (r *queryResolver) Todos(ctx context.Context) ([]*model.Todo, error) {
 	if err != nil {
 		panic(fmt.Errorf("got: %v", err))
 	}
-	results := []*model.Todo{}
+	var results []*model.Todo
 	for _, v := range res.GetTodoList() {
 		results = append(results, &model.Todo{ID: v.Id, Text: v.Text, Done: v.Done})
 	}

@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useSubscription } from '@apollo/react-hooks'
 import { gql } from 'apollo-boost'
-import React, { useEffect, useState } from 'react'
-import { Button, Checkbox, Form } from 'semantic-ui-react'
+import React, { useEffect, useMemo, useState } from 'react'
+import { Button, Checkbox, Form, List, Container, Divider } from 'semantic-ui-react'
 
 const FIND_TODOS = gql`
     query findTodos {
@@ -54,52 +54,82 @@ interface TodoList {
 }
 
 const Todo = () => {
-    const [ text, setText ] = useState('')
-    const { loading, error, data } = useQuery<TodoList, {}>(FIND_TODOS)
+    const [text, setText] = useState('')
+    const [todoArray, setTodoArray] = useState([])
     const [createTodo] = useMutation(CREATE_TODO)
-    // useEffect(() => {
-    //     //Mount
-    //     console.log('mount')
-    //     return () => {
-    //         console.log('unmount')
-    //     }
-    // }, [])
+    const { loading, error, data } = useQuery<TodoList, {}>(FIND_TODOS)
+    useEffect(() => {
+        if (data) {
+            setTodoArray(data.todos)
+        }
+        return () => {
+        }
+    }, [data])
 
     const [changeStatus] = useMutation(CHANGE_STATUS)
-    const s = useSubscription(
-        TODO_SUBSCRIPTION,
-        {
-            shouldResubscribe: true, onSubscriptionData: (d) => {
-                console.log(d)
-            },
-        },
-    )
-    console.log(s.error)
+    // const s = useSubscription(
+    //     TODO_SUBSCRIPTION,
+    //     {
+    //         shouldResubscribe: true, onSubscriptionData: (d) => {
+    //             console.log(d)
+    //         },
+    //     },
+    // )
+    if (loading) return (<>
+        <div>Loading...</div>
+    </>)
+    if (error) return (<>
+        <div>Error {error}</div>
+    </>)
+    const todoList = todoArray.map(({ text, done, id }) => (
 
-    if (loading) return <div>Loading...</div>
-    if (error) return <div>Error :(</div>
-    const todoList = data.todos.map(({ text, done, id }) => (
-        <div key={id}>
-            <Checkbox label={`${text} ${id}`} checked={done} onChange={(_, d) => {
-                const status = d.checked ? true : false
-                changeStatus({ variables: { id, status } })
-            }}/>
-        </div>
+        <List.Item key={id}>
+            <List.Icon name='dot circle' size='small' verticalAlign='middle'/>
+            <List.Content>
+                <List.Description as='div'>
+                    <div>
+                        <Checkbox label={`${text}`} checked={done} onChange={async (_, d) => {
+                            const status = !!d.checked
+                            const resp = await changeStatus({ variables: { id, status } })
+                            const done = resp.data.changeStatus.done
+                            setTodoArray(todoArray.map((t) => {
+                                if (t.id === id) {
+                                    t.done = done
+                                }
+                                return t
+                            }))
+                        }}/>
+                    </div>
+                </List.Description>
+            </List.Content>
+        </List.Item>
+
+
     ))
     return (
-      <>
-        <div>
-          <Form onSubmit={() => {createTodo({ variables: { input: { text }}})}}>
-            <Form.Input placeholder='todo'
-                        name='text'
-                        value={text}
-                        onChange={(e, { value }) => setText(value)}>
-            </Form.Input>
-            <Button type='submit'>Submit</Button>
-          </Form>
-        </div>
-        <div>{todoList}</div>
-      </>
+        <>
+            <Container>
+                <div>
+                    <Form onSubmit={async () => {
+                        const resp = await createTodo({ variables: { input: { text } } })
+                        setTodoArray([...todoArray, resp.data.createTodo])
+                    }}>
+                        <Form.Input placeholder='todo'
+                                    name='text'
+                                    value={text}
+                                    onChange={(e, { value }) => setText(value)}>
+                        </Form.Input>
+                        <Button type='submit'>Submit</Button>
+                    </Form>
+                </div>
+                <Divider/>
+                <div>
+                    <List divided relaxed>
+                        {todoList}
+                    </List>
+                </div>
+            </Container>
+        </>
     )
 }
 

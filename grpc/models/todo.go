@@ -49,3 +49,11 @@ func CreateTodo(text string) Todo {
 	db.Create(&todo)
 	return todo
 }
+
+func UpdateTodo(id string, isDone bool) Todo {
+	todo := Todo{
+		ID:   sql.NullString{String: id, Valid: true},
+	}
+	db.First(&todo).Update("done", isDone)
+	return todo
+}

@@ -5,8 +5,8 @@ import "validate/validate.proto";
 // The todo service definition.
 service TodoService {
   rpc GetTodos (Empty) returns (Todos) {}
-  rpc CreateTodo (TodoRequest) returns (Todo) {}
-  rpc UpdateTodo (Todo) returns (Todo) {}
+  rpc CreateTodo (TodoCreateRequest) returns (Todo) {}
+  rpc UpdateTodo (TodoUpdateRequest) returns (Todo) {}
 }
 // The request message containing the user's name.
 message Todos {
@@ -19,7 +19,12 @@ message Todo {
     bool done = 3;
 }
 
-message TodoRequest {
+message TodoUpdateRequest {
+    string  id = 1;
+    bool done = 2;
+}
+
+message TodoCreateRequest {
   string text = 1 [(validate.rules).string = {max_len: 20, min_len: 1}];
 }
 

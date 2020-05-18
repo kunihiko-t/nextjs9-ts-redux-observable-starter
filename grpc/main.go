@@ -23,34 +23,29 @@ type Validator interface {
 func ServerValidationUnaryInterceptor(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (resp interface{}, err error) {
 	if r, ok := req.(Validator); ok {
 		if err := r.Validate(); err != nil {
-			// TODO: validation error のカスタマイズ
-			// if e, ok := err.(pb.TodoRequestValidationError); ok {
-			// 	message :=
-			// }
-
 			return nil, status.Error(codes.InvalidArgument, err.Error())
 		}
 	}
-
 	return handler(ctx, req)
 }
 
 func (s *server) GetTodos(_ context.Context, _ *pb.Empty) (*pb.Todos, error) {
-	todos := []*pb.Todo{}
+	var todos []*pb.Todo
 	for _, v := range models.GetTodos() {
 		todos = append(todos, &pb.Todo{Id: v.ID.String, Text: v.Text.String, Done: v.Done.Bool})
 	}
 	return &pb.Todos{TodoList: todos}, nil
 }
 
-func (*server) CreateTodo(_ context.Context, req *pb.TodoRequest) (*pb.Todo, error) {
+func (*server) CreateTodo(_ context.Context, req *pb.TodoCreateRequest) (*pb.Todo, error) {
 	todo := models.CreateTodo(req.Text)
 
 	return &pb.Todo{Id: todo.ID.String, Text: todo.Text.String, Done: todo.Done.Bool}, nil
 }
 
-func (*server) UpdateTodo(context.Context, *pb.Todo) (*pb.Todo, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateTodo not implemented")
+func (*server) UpdateTodo(_ context.Context, req *pb.TodoUpdateRequest) (*pb.Todo, error) {
+	todo := models.UpdateTodo(req.Id, req.Done)
+	return &pb.Todo{Id: todo.ID.String, Text: todo.Text.String, Done: todo.Done.Bool}, nil
 }
 
 func main() {

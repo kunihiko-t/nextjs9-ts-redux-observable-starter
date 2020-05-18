@@ -185,27 +185,24 @@ var _ interface {
 	ErrorName() string
 } = TodoValidationError{}
 
-// Validate checks the field values on TodoRequest with the rules defined in
-// the proto definition for this message. If any rules are violated, an error
-// is returned.
-func (m *TodoRequest) Validate() error {
+// Validate checks the field values on TodoUpdateRequest with the rules defined
+// in the proto definition for this message. If any rules are violated, an
+// error is returned.
+func (m *TodoUpdateRequest) Validate() error {
 	if m == nil {
 		return nil
 	}
 
-	if l := utf8.RuneCountInString(m.GetText()); l < 1 || l > 20 {
-		return TodoRequestValidationError{
-			field:  "Text",
-			reason: "value length must be between 1 and 20 runes, inclusive",
-		}
-	}
+	// no validation rules for Id
+
+	// no validation rules for Done
 
 	return nil
 }
 
-// TodoRequestValidationError is the validation error returned by
-// TodoRequest.Validate if the designated constraints aren't met.
-type TodoRequestValidationError struct {
+// TodoUpdateRequestValidationError is the validation error returned by
+// TodoUpdateRequest.Validate if the designated constraints aren't met.
+type TodoUpdateRequestValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -213,22 +210,24 @@ type TodoRequestValidationError struct {
 }
 
 // Field function returns field value.
-func (e TodoRequestValidationError) Field() string { return e.field }
+func (e TodoUpdateRequestValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e TodoRequestValidationError) Reason() string { return e.reason }
+func (e TodoUpdateRequestValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e TodoRequestValidationError) Cause() error { return e.cause }
+func (e TodoUpdateRequestValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e TodoRequestValidationError) Key() bool { return e.key }
+func (e TodoUpdateRequestValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e TodoRequestValidationError) ErrorName() string { return "TodoRequestValidationError" }
+func (e TodoUpdateRequestValidationError) ErrorName() string {
+	return "TodoUpdateRequestValidationError"
+}
 
 // Error satisfies the builtin error interface
-func (e TodoRequestValidationError) Error() string {
+func (e TodoUpdateRequestValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -240,14 +239,14 @@ func (e TodoRequestValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sTodoRequest.%s: %s%s",
+		"invalid %sTodoUpdateRequest.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = TodoRequestValidationError{}
+var _ error = TodoUpdateRequestValidationError{}
 
 var _ interface {
 	Field() string
@@ -255,7 +254,81 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = TodoRequestValidationError{}
+} = TodoUpdateRequestValidationError{}
+
+// Validate checks the field values on TodoCreateRequest with the rules defined
+// in the proto definition for this message. If any rules are violated, an
+// error is returned.
+func (m *TodoCreateRequest) Validate() error {
+	if m == nil {
+		return nil
+	}
+
+	if l := utf8.RuneCountInString(m.GetText()); l < 1 || l > 20 {
+		return TodoCreateRequestValidationError{
+			field:  "Text",
+			reason: "value length must be between 1 and 20 runes, inclusive",
+		}
+	}
+
+	return nil
+}
+
+// TodoCreateRequestValidationError is the validation error returned by
+// TodoCreateRequest.Validate if the designated constraints aren't met.
+type TodoCreateRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e TodoCreateRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e TodoCreateRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e TodoCreateRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e TodoCreateRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e TodoCreateRequestValidationError) ErrorName() string {
+	return "TodoCreateRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e TodoCreateRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sTodoCreateRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = TodoCreateRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = TodoCreateRequestValidationError{}
 
 // Validate checks the field values on Empty with the rules defined in the
 // proto definition for this message. If any rules are violated, an error is returned.
