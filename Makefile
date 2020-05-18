@@ -3,10 +3,9 @@ init:
 	kubectl apply -f kubernetes/namespace.yaml
 	helm repo add stable https://kubernetes-charts.storage.googleapis.com
 
-
 .PHONY: install-mysql
 install-mysql:
-	helm upgrade -i -f charts/mysql/values.yaml --namespace sample mysql stable/mysql
+	helm upgrade -i -f charts/mysql/values.yaml --namespace sample mysql stable/mysql --wait
 
 .PHONY: migrate-up
 migrate-up:
@@ -40,4 +39,15 @@ generate-from-proto:
 .PHONY: run-next
 run-next:
 	docker build . -t next
+	kubectl apply -f kubernetes/namespace.yaml
 	kubectl apply -f kubernetes/next/
+
+.PHONY: stop-next
+stop-next:
+	docker build . -t next
+	kubectl delete -f kubernetes/namespace.yaml
+	kubectl delete -f kubernetes/next/
+
+.PHONY: cleanup
+cleanup:
+	kubectl delete -f kubernetes/namespace.yaml
