@@ -1,0 +1,31 @@
+syntax = "proto3";
+option go_package = ".;pb";
+import "validate/validate.proto";
+
+// The todo service definition.
+service TodoService {
+  rpc GetTodos (Empty) returns (Todos) {}
+  rpc CreateTodo (TodoCreateRequest) returns (Todo) {}
+  rpc UpdateTodo (TodoUpdateRequest) returns (Todo) {}
+}
+// The request message containing the user's name.
+message Todos {
+  repeated Todo todoList = 1;
+}
+// The response message containing the greetings
+message Todo {
+    string  id = 1;
+    string text = 2;
+    bool done = 3;
+}
+
+message TodoUpdateRequest {
+    string  id = 1;
+    bool done = 2;
+}
+
+message TodoCreateRequest {
+  string text = 1 [(validate.rules).string = {max_len: 20, min_len: 1}];
+}
+
+message Empty {}

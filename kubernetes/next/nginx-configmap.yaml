@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: next-nginx-configmap
-  namespace: next
+  namespace: sample
 data:
   nginx.conf: |-
     worker_processes  1;

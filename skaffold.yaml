@@ -1,0 +1,30 @@
+apiVersion: skaffold/v2beta4
+kind: Config
+metadata:
+  name: nextjs-ts-redux-observable-starter
+build:
+  artifacts:
+  - image: next
+    context: .
+    docker:
+      dockerfile: Dockerfile
+      buildArgs:
+        NEXT_PUBLIC_BFF_HOST: "http://127.0.0.1:30001"
+        NEXT_PUBLIC_BFF_WS_HOST: "ws://127.0.0.1:30001"
+  - image: grpc
+    context: grpc
+  - image: bff
+    context: bff
+  local:
+    concurrency: 0
+    useBuildkit: true
+deploy:
+  kubectl:
+    manifests:
+    - kubernetes/next/deployment.yaml
+    - kubernetes/next/nginx-configmap.yaml
+    - kubernetes/next/service.yaml
+    - kubernetes/grpc/deployment.yaml
+    - kubernetes/grpc/service.yaml
+    - kubernetes/bff/deployment.yaml
+    - kubernetes/bff/service.yaml

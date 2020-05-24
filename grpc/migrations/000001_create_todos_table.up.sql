@@ -1,0 +1,5 @@
+CREATE TABLE todos (
+    id VARCHAR(36) PRIMARY KEY,
+    text TEXT DEFAULT NULL,
+    done BOOLEAN DEFAULT FALSE
+);
