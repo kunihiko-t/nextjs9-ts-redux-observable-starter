@@ -3,7 +3,7 @@ import { Epic } from 'redux-observable'
 
 import { ofAction } from 'typescript-fsa-redux-observable'
 // for actions
-import actions from '../actions/github'
+import actions from '~/actions/github'
 import { ajax } from 'rxjs/ajax'
 import { catchError, debounceTime, map, mergeMap } from 'rxjs/operators'
 

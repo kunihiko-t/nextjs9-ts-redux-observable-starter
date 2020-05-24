@@ -1,6 +1,6 @@
 import { combineEpics } from 'redux-observable'
-import { userLogin, userLogout } from './user'
-import { fetchRepositories } from './github'
+import { userLogin, userLogout } from '~/epics/user'
+import { fetchRepositories } from '~/epics/github'
 
 export default combineEpics(
     userLogin,

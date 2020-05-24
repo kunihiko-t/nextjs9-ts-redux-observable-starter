@@ -1,7 +1,7 @@
 import React from 'react'
 import { Provider } from 'react-redux'
 import App, { Container } from 'next/app'
-import { store } from '../src/store'
+import { store } from '~/store'
 import 'semantic-ui-css/semantic.min.css'
 import { ApolloProvider } from '@apollo/react-hooks'
 import ApolloClient from 'apollo-client'

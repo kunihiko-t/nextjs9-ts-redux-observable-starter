@@ -1,7 +1,7 @@
 import React from 'react'
-import Wrapper from '../src/components/Wrapper'
-import GlobalNav from '../src/components/GlobalNav'
-import MouseTracker from '../src/components/Mouse'
+import Wrapper from '~/components/Wrapper'
+import GlobalNav from '~/components/GlobalNav'
+import MouseTracker from '~/components/Mouse'
 
 const RenderProps = () => {
     return (

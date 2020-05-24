@@ -1,11 +1,11 @@
 import React from 'react'
-import actions from '../src/actions/user'
+import actions from '~/actions/user'
 import { useDispatch, useSelector } from 'react-redux'
 import { Form, Header } from 'semantic-ui-react'
-import CenterLoader from '../src/components/CenterLoader'
-import LoginInput from '../src/components/form/LoginInput'
-import LoginButton from '../src/components/form/LoginButton'
-import LoginWrapper from '../src/components/LoginWrapper'
+import CenterLoader from '~/components/CenterLoader'
+import LoginInput from '~/components/form/LoginInput'
+import LoginButton from '~/components/form/LoginButton'
+import LoginWrapper from '~/components/LoginWrapper'
 import Router from 'next/router'
 
 const Login = () => {

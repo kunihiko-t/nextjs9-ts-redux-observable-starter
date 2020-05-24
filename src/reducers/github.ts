@@ -1,6 +1,6 @@
 import immutable from 'immutability-helper'
 import { reducerWithInitialState } from 'typescript-fsa-reducers'
-import actions from '../actions/github'
+import actions from '~/actions/github'
 
 export const githubState = {
     status: 'idle',

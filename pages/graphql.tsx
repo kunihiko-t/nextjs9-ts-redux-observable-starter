@@ -1,7 +1,7 @@
 import React from 'react'
-import Wrapper from '../src/components/Wrapper'
-import GlobalNav from '../src/components/GlobalNav'
-import Todo from '../src/components/Todo'
+import Wrapper from '~/components/Wrapper'
+import GlobalNav from '~/components/GlobalNav'
+import Todo from '~/components/Todo'
 
 const RenderProps = () => {
     return (

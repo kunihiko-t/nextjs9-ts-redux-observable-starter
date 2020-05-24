@@ -1,6 +1,6 @@
 import immutable from 'immutability-helper'
 import { reducerWithInitialState } from 'typescript-fsa-reducers'
-import actions from '../actions/user'
+import actions from '~/actions/user'
 
 export const userState = {
     isAuthenticated: false,

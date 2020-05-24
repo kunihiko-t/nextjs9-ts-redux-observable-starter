@@ -1,5 +1,5 @@
-import user from './user'
-import github from './github'
+import user from '~/reducers/user'
+import github from '~/reducers/github'
 
 export default {
     ...user,

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Table } from 'semantic-ui-react'
 import { GithubRepository } from '../../types/common'
-import CenterLoader from '../components/CenterLoader'
+import CenterLoader from '~/components/CenterLoader'
 
 const repositoryList: React.FC<{ items: GithubRepository[], total_count: number, isLoading: boolean }> = ({ items, total_count, isLoading }) => {
     const totalCountElem = items.length > 0 ? (<div>Total Count: {total_count}</div>) : (<></>)

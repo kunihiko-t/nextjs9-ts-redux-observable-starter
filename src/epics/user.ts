@@ -2,7 +2,7 @@ import { of, merge } from 'rxjs'
 import { Epic } from 'redux-observable'
 import { ofAction } from 'typescript-fsa-redux-observable'
 import { AnyAction } from 'typescript-fsa'
-import actions from '../actions/user'
+import actions from '~/actions/user'
 import { debounceTime, delay, map, mergeMap,  } from 'rxjs/operators'
 
 export const userLogin: Epic<AnyAction> = (action$) => action$.pipe(

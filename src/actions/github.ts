@@ -1,4 +1,4 @@
-import { ActionTypes } from '../constants'
+import { ActionTypes } from '~/constants'
 
 import actionCreatorFactory from 'typescript-fsa'
 
