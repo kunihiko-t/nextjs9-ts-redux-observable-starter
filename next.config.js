@@ -41,6 +41,10 @@ const nextConfig = {
         HACK_removeMinimizeOptionFromCssLoaders(config)
         return  config
     },
+    env: {
+      BFF_HOST: process.env.NEXT_PUBLIC_BFF_HOST || 'http://localhost:8080',
+      BFF_WS_HOST: process.env.NEXT_PUBLIC_BFF_WS_HOST || 'ws://localhost:8080',
+    }
 }
 
 
