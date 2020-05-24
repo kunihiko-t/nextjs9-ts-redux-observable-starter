@@ -1,4 +1,4 @@
-# Next.js 9.4.1 + TypeScript + redux-observable +( GraphQL, gRPC ) starter
+# Next.js 9.4.1 + TypeScript + redux-observable +( GraphQL, gRPC, kubernetes, skaffold ) starter
 
 Still WIP.
 
