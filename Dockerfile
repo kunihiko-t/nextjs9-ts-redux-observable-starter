@@ -2,12 +2,18 @@ ARG NODE_VERSION=12
 
 FROM node:${NODE_VERSION}-alpine as builder
 
+ARG NEXT_PUBLIC_BFF_HOST
+ARG NEXT_PUBLIC_BFF_WS_HOST
+
 WORKDIR /app
 
 COPY package.json yarn.lock ./
 RUN apk add git && yarn install
 
 COPY . /app
+
+ENV NEXT_PUBLIC_BFF_HOST ${NEXT_PUBLIC_BFF_HOST}
+ENV NEXT_PUBLIC_BFF_WS_HOST ${NEXT_PUBLIC_BFF_WS_HOST}
 
 RUN yarn build
 ENTRYPOINT yarn start

@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bff-deployment
+  namespace: sample
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bff
+  template:
+    metadata:
+      labels:
+        app: bff
+    spec:
+      terminationGracePeriodSeconds: 1
+      containers:
+      - name: bff
+        image: bff
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
+          name: bff
+        env:
+        - name: GPRC_URL
+          value: "grpc-service:50052"
+        resources: {}
+

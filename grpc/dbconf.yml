@@ -1,3 +1,6 @@
 development:
   driver: mysql
   open: root:root@tcp(127.0.0.1:32000)/sample?charset=utf8&parseTime=True&loc=Local
+production:
+  driver: mysql
+  open: root:root@tcp(mysql)/sample?charset=utf8&parseTime=True&loc=Local

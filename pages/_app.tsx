@@ -12,8 +12,8 @@ import { WebSocketLink } from 'apollo-link-ws'
 import { split } from 'apollo-link'
 import { getMainDefinition } from 'apollo-utilities'
 
-const API_URL = 'http://localhost:8080/query'
-const WS_URL = 'ws://localhost:8080/query'
+const API_URL = `${process.env.NEXT_PUBLIC_BFF_HOST}/query`
+const WS_URL = `${process.env.NEXT_PUBLIC_BFF_WS_HOST}/query`
 
 const httpLink = createHttpLink({
     uri: API_URL,

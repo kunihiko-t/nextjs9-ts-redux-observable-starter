@@ -51,3 +51,7 @@ stop-next:
 .PHONY: cleanup
 cleanup:
 	kubectl delete -f kubernetes/namespace.yaml
+
+.PHONY: dev
+dev:
+	skaffold dev

@@ -43,6 +43,7 @@ func GetDB() (db *gorm.DB) {
 	}
 	return
 }
+
 func getDBConf() (config *yaml.File, err error) {
 	config, err = yaml.ReadFile(getDBConfigFile())
 	return

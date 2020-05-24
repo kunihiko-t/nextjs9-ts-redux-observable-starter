@@ -41,3 +41,11 @@ if you'd like to remove all, just run
 make cleanup
 ```
 
+## Run all servcies on k8s
+
+Make sure you have run `make init`, `make install-mysql` and `make migrate-up`.
+
+```
+make dev
+```
+

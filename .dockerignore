@@ -2,6 +2,9 @@
 bff
 charts
 grpc
+kubernetes
 node_modules
 protobuf
 .circleci
+skaffold.yaml
+Makfile
