@@ -1,4 +1,4 @@
-# Next.js 9.4.1 + TypeScript + redux-observable starter
+# Next.js 9.4.1 + TypeScript + redux-observable +( GraphQL, gRPC ) starter
 
 Still WIP.
 
@@ -43,7 +43,7 @@ make cleanup
 
 ## Run all servcies on k8s
 
-Make sure you have run `make init`, `make install-mysql` and `make migrate-up`.
+Make sure you have run `make init`, `make install-mysql` , `make migrate-up` and install [skaffold](https://github.com/GoogleContainerTools/skaffold).
 
 ```
 make dev
